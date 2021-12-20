@@ -1,44 +1,34 @@
 import 'dart:convert';
+import 'package:architerone_student/data/network/authentication_network.dart';
 
-import 'package:architerone_student/app/routes/api_routes.dart';
-import 'package:http/http.dart' as http;
 
 class AuthenticationRepository {
+  final AuthenticationNetworkServices authenticationNetworkServices;
   //! Instance of client
-  final client = http.Client();
-  final headers = {
-    'Content-type': 'application/json',
-    'Accept': 'application/json',
-    "Access-Control-Allow-Origin": ""
-  };
+
+  AuthenticationRepository({required this.authenticationNetworkServices});
 
   Future<dynamic> signUp({
     required String studentEmail,
     required String studentPassword,
   }) async {
-    final Uri uri = Uri.parse(ApiRoutes.baseUrl + "/auth/sign");
-    final http.Response response = await client.post(uri,
-        body: jsonEncode({
-          "student_email": studentEmail,
-          "student_password": studentPassword,
-        }),
-        headers: headers);
-    // ignore: avoid_print
-    print(response.body);
+    var response = await authenticationNetworkServices.signUp(
+        studentEmail: studentEmail, studentPassword: studentPassword);
+    //Decode the value
+    final Map<String, dynamic> parseData = jsonDecode(response.toString());
+    print(parseData);
+    return parseData;
   }
 
   Future<dynamic> login({
     required String studentEmail,
     required String studentPassword,
   }) async {
-    final Uri uri = Uri.parse(ApiRoutes.baseUrl + "/auth/login");
-    final http.Response response = await client.post(uri,
-        body: jsonEncode({
-          "student_email": studentEmail,
-          "student_password": studentPassword,
-        }),
-        headers: headers);
-    // ignore: avoid_print
-    print(response.body);
+   var response = await  authenticationNetworkServices.login(
+        studentEmail: studentEmail, studentPassword: studentPassword);
+    //Decode the value
+    final Map<String, dynamic> parseData = jsonDecode(response.toString());
+    print(parseData);
+    return parseData;
   }
 }
