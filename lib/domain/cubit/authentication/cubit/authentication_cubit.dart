@@ -1,5 +1,6 @@
 import 'package:architerone_student/data/repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -13,7 +14,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   //! create a wrapper method around function
 
   Future signup({
-      required BuildContext context,
+    required BuildContext context,
     required String studentEmail,
     required String studentPassword,
   }) async {
@@ -24,14 +25,15 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       if (studentEmail.isNotEmpty && studentPassword.isNotEmpty) {
         var _response = await authenticationRepository.signUp(
             studentEmail: studentEmail, studentPassword: studentPassword);
-        print(_response);
+       
         if (_response != null) {
-            bool isSigned = _response['signed'];
+          bool isSigned = _response['signed'];
           String jwt = _response['message'];
           emit(AuthenticationCompleted(response: jwt));
           if (isSigned) {
+            await WriteCache.setString(key: "jwt", value: jwt);
             Navigator.of(context).pushNamed("/home");
-          } 
+          }
         }
       } else {
         emit(AuthenticationError(error: "Fill the Credentials"));
@@ -53,15 +55,15 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       if (studentEmail.isNotEmpty && studentPassword.isNotEmpty) {
         var _response = await authenticationRepository.login(
             studentEmail: studentEmail, studentPassword: studentPassword);
-        print(_response);
         if (_response != null) {
           bool isSigned = _response['signed'];
           String jwt = _response['message'];
           emit(AuthenticationCompleted(response: jwt));
-         
-         if(isSigned){
+
+          if (isSigned) {
+            await WriteCache.setString(key: "jwt", value: jwt);
             Navigator.of(context).pushNamed("/home");
-         } 
+          }
         }
       } else {
         emit(AuthenticationError(error: "Fill the Credentials"));

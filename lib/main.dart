@@ -14,7 +14,7 @@ class Lava extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      initialRoute: "/login",
+      initialRoute: "/splash",
       onGenerateRoute: AppRouter.generateRoute,
     );
   }

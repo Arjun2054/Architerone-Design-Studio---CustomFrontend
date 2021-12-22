@@ -4,7 +4,6 @@ import 'package:architerone_student/data/network/authentication_network.dart';
 
 class AuthenticationRepository {
   final AuthenticationNetworkServices authenticationNetworkServices;
-  //! Instance of client
 
   AuthenticationRepository({required this.authenticationNetworkServices});
 

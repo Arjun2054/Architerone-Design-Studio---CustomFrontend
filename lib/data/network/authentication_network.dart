@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:architerone_student/app/routes/api_routes.dart';
 import 'package:http/http.dart' as http;
 
